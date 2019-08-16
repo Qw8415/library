@@ -6,7 +6,7 @@ class Library {
 
         book1.title = "W pustyni i puszczy";
         book1.author = "Henryk Sienkiewicz";
-        book1.relaseDate = 2010;
+        book1.releaseDate = 2010;
         book1.pages = 296;
         book1.publisher = "Greg";
         book1.isbn = "9788393271890";
@@ -15,7 +15,7 @@ class Library {
         System.out.println("Dostępne książki:");
         System.out.println(book1.title);
         System.out.println(book1.author);
-        System.out.println(book1.relaseDate);
+        System.out.println(book1.releaseDate);
         System.out.println(book1.pages);
         System.out.println(book1.publisher);
         System.out.println(book1.isbn);
