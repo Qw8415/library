@@ -1,6 +1,7 @@
 package qw8415.library.io;
 
 import qw8415.library.model.Book;
+import qw8415.library.model.Magazine;
 
 import java.util.Scanner;
 
@@ -26,6 +27,23 @@ public class DataReader {
          int pages = getInt();
 
          return new Book(title, author, releaseDate, pages, publisher, isbn);
+     }
+
+     public Magazine readAndCreateMagazine() {
+         System.out.println("Tytuł:");
+         String title = scanner.nextLine();
+         System.out.println("Wydawnictwo:");
+         String publisher = scanner.nextLine();
+         System.out.println("Język:");
+         String language = scanner.nextLine();
+         System.out.println("Rok wydania:");
+         int year = getInt();
+         System.out.println("Miesiąc:");
+         int month = getInt();
+         System.out.println("Dzień:");
+         int day = getInt();
+
+         return new Magazine(title, publisher, language, year, month, day);
      }
 
      public int getInt() {
