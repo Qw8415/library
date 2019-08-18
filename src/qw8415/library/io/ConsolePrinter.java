@@ -28,7 +28,7 @@ public class ConsolePrinter {
         if (countMagazines == 0) printLine("Brak magazynów w bibliotece!");
     }
 
-    private void printLine(String text) {
+    public void printLine(String text) {
         System.out.println(text);
     }
 }

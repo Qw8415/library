@@ -1,18 +1,23 @@
 package qw8415.library.app;
 
+import qw8415.library.ecxeption.NoSuchOptionException;
+import qw8415.library.io.ConsolePrinter;
 import qw8415.library.io.DataReader;
 import qw8415.library.model.Library;
 
+import java.util.InputMismatchException;
+
 class LibraryControl {
-    private DataReader dataReader = new DataReader();
     private Library library = new Library();
+    private ConsolePrinter printer = new ConsolePrinter();
+    private DataReader dataReader = new DataReader(printer);
 
     public void controlLoop() {
         Option option;
 
         do {
             printOption();
-            option = Option.createFromInt(dataReader.getInt());
+            option = getOption();
             switch (option) {
                 case ADD_BOOK:
                     addBook();
@@ -40,20 +45,46 @@ class LibraryControl {
         System.out.println("Do widzenia!");
     }
 
+    private Option getOption() {
+        boolean optionOK = false;
+        Option option = null;
+        do {
+            try {
+                option = Option.createFromInt(dataReader.getInt());
+                optionOK = true;
+            } catch (NoSuchOptionException e) {
+                printer.printLine(e.getMessage() + " Wybierz ponownie:");
+            } catch (InputMismatchException e) {
+                printer.printLine("Podaj nr opcji!");
+            }
+        } while (!optionOK);
+        return option;
+    }
+
     private void addBook() {
-        library.addBook(dataReader.readAndCreteBook());
+        try {
+            library.addBook(dataReader.readAndCreateBook());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            printer.printLine(e.getMessage());
+        } catch (InputMismatchException e) {
+            printer.printLine("Wprowadzono niepoprawne dane. Nie udało się dodać książki.");
+        }
     }
 
     private void addMagazine() {
-        library.addMagazine(dataReader.readAndCreateMagazine());
+        try {
+            library.addMagazine(dataReader.readAndCreateMagazine());
+        } catch (ArrayIndexOutOfBoundsException e) {
+            printer.printLine(e.getMessage());
+        } catch (InputMismatchException e) {
+            printer.printLine("Wprowadzono niepoprawne dane. Nie udało się dodać magazynu.");
+        }
     }
 
-    private void printBooks() {
-        library.printBooks();
-    }
+    private void printBooks() { printer.printBooks(library.getPublications()); }
 
     private void printMagazines() {
-        library.printMagazines();
+        printer.printMagazines(library.getPublications());
     }
 
     private void printOption() {

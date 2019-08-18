@@ -1,5 +1,7 @@
 package qw8415.library.app;
 
+import qw8415.library.ecxeption.NoSuchOptionException;
+
 enum Option {
     EXIT(0, "Wyjdź"),
     ADD_BOOK(1, "Dodaj książkę"),
@@ -28,7 +30,11 @@ enum Option {
         return value + " - " + description;
     }
 
-    static Option createFromInt(int option) {
-        return Option.values()[option];
+    static Option createFromInt(int option) throws NoSuchOptionException {
+        try {
+            return Option.values()[option];
+        } catch (IndexOutOfBoundsException e) {
+            throw new NoSuchOptionException("Brak opcji " + option);
+        }
     }
 }
