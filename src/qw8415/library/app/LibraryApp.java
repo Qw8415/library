@@ -1,7 +1,7 @@
 package qw8415.library.app;
 
 class LibraryApp {
-    final static String APP_NAME = "Biblioteka v1.7";
+    final static String APP_NAME = "Biblioteka v1.8";
 
     public static void main(String[] args) {
         LibraryControl controller = new LibraryControl();

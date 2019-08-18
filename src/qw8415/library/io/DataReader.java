@@ -58,4 +58,8 @@ public class DataReader {
              scanner.nextLine();
          }
      }
+
+     public String getString() {
+         return scanner.nextLine();
+     }
 }

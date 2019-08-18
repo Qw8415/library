@@ -1,16 +1,33 @@
 package qw8415.library.app;
 
+import qw8415.library.ecxeption.DataExportException;
+import qw8415.library.ecxeption.DataImportException;
 import qw8415.library.ecxeption.NoSuchOptionException;
 import qw8415.library.io.ConsolePrinter;
 import qw8415.library.io.DataReader;
+import qw8415.library.io.file.FileManager;
+import qw8415.library.io.file.FileManagerBuilder;
 import qw8415.library.model.Library;
 
 import java.util.InputMismatchException;
 
 class LibraryControl {
-    private Library library = new Library();
     private ConsolePrinter printer = new ConsolePrinter();
-    private DataReader dataReader = new DataReader(printer);
+    private DataReader reader = new DataReader(printer);
+    private FileManager fileManager;
+    private Library library;
+
+    LibraryControl() {
+        fileManager = new FileManagerBuilder(printer, reader).build();
+        try {
+            library = fileManager.importData();
+            printer.printLine("Wczytano dane.");
+        } catch (DataImportException e) {
+            printer.printLine(e.getMessage());
+            library = new Library();
+            printer.printLine("Zainicjowano nową bazę danych.");
+        }
+    }
 
     public void controlLoop() {
         Option option;
@@ -41,7 +58,13 @@ class LibraryControl {
     }
 
     private void exit() {
-        dataReader.close();
+        try {
+            fileManager.exportData(library);
+            printer.printLine("Zapisano bazę.");
+        } catch (DataExportException e) {
+            printer.printLine(e.getMessage());
+        }
+        reader.close();
         System.out.println("Do widzenia!");
     }
 
@@ -50,7 +73,7 @@ class LibraryControl {
         Option option = null;
         do {
             try {
-                option = Option.createFromInt(dataReader.getInt());
+                option = Option.createFromInt(reader.getInt());
                 optionOK = true;
             } catch (NoSuchOptionException e) {
                 printer.printLine(e.getMessage() + " Wybierz ponownie:");
@@ -63,7 +86,7 @@ class LibraryControl {
 
     private void addBook() {
         try {
-            library.addBook(dataReader.readAndCreateBook());
+            library.addBook(reader.readAndCreateBook());
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine(e.getMessage());
         } catch (InputMismatchException e) {
@@ -73,7 +96,7 @@ class LibraryControl {
 
     private void addMagazine() {
         try {
-            library.addMagazine(dataReader.readAndCreateMagazine());
+            library.addMagazine(reader.readAndCreateMagazine());
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine(e.getMessage());
         } catch (InputMismatchException e) {
