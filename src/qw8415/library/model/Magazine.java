@@ -3,6 +3,7 @@ package qw8415.library.model;
 import java.util.Objects;
 
 public class Magazine extends Publication {
+    public static final String TYPE = "MAGAZINE";
     private int month;
     private int day;
     private String language;
@@ -12,6 +13,17 @@ public class Magazine extends Publication {
         this.language = language;
         this.month = month;
         this.day = day;
+    }
+
+    @Override
+    public String toCsv() {
+        return TYPE + CsvSeparator +
+                getTitle() + CsvSeparator +
+                getPublisher() + CsvSeparator +
+                getYear() + CsvSeparator +
+                month + CsvSeparator +
+                day + CsvSeparator +
+                language;
     }
 
     @Override

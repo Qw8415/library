@@ -4,8 +4,6 @@ import qw8415.library.ecxeption.NoSuchFileTypeException;
 import qw8415.library.io.ConsolePrinter;
 import qw8415.library.io.DataReader;
 
-import java.nio.file.NoSuchFileException;
-
 public class FileManagerBuilder {
     private ConsolePrinter printer;
     private DataReader reader;
@@ -19,6 +17,8 @@ public class FileManagerBuilder {
         printer.printLine("Wybierz format danych: ");
         FileType fileType = getFileType();
         switch (fileType) {
+            case CSV:
+                return new CsvFileManager();
             case SERIAL:
                 return new SerializableFileManager();
             default:

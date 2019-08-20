@@ -1,10 +1,11 @@
 package qw8415.library.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class Library implements Serializable {
-    private static final int MAX_PUBLICATIONS = 2000;
-    private Publication[] publications = new Publication[MAX_PUBLICATIONS];
+    private static final int INITIAL_CAPACITY = 1;
+    private Publication[] publications = new Publication[INITIAL_CAPACITY];
     private int publicationsNumber;
 
     public Publication[] getPublications() {
@@ -15,18 +16,22 @@ public class Library implements Serializable {
         return result;
     }
 
-    public void addBook(Book book) {
-        addPublication(book);
-    }
-
-    public void addMagazine(Magazine magazine) {
-        addPublication(magazine);
-    }
-
-    private void addPublication(Publication publication) {
-        if (publicationsNumber >= MAX_PUBLICATIONS)
-            throw new ArrayIndexOutOfBoundsException("Limit publikacji w bibliotece: " + publicationsNumber + "/" + MAX_PUBLICATIONS);
+    public void addPublication(Publication publication) {
+        if (publicationsNumber == publications.length) {
+            publications = Arrays.copyOf(publications, publications.length + 10);
+        }
         publications[publicationsNumber] = publication;
         publicationsNumber++;
+    }
+
+    public boolean removePublication(Publication publication) {
+        for (int i = 0; i < publicationsNumber; i++) {
+            if (publications[i].equals(publication)) {
+                System.arraycopy(publications, i + 1, publications, i, publications.length - i - 1);
+                publicationsNumber--;
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -3,12 +3,13 @@ package qw8415.library.model;
 import java.util.Objects;
 
 public class Book extends Publication{
+    public static final String TYPE = "Book";
     private String author;
     private int pages;
     private String isbn;
 
-    public Book(String title, String author, int releaseDate, int pages, String publisher, String isbn) {
-        this(title, author, releaseDate, pages, publisher);
+    public Book(String title, String author, int year, int pages, String publisher, String isbn) {
+        this(title, author, year, pages, publisher);
         this.isbn = isbn;
     }
 
@@ -16,6 +17,17 @@ public class Book extends Publication{
         super(year, title, publisher);
         this.author = author;
         this.pages = pages;
+    }
+
+    @Override
+    public String toCsv() {
+        return TYPE + CsvSeparator +
+                getTitle() + CsvSeparator +
+                getPublisher() + CsvSeparator +
+                getYear() + CsvSeparator +
+                author + CsvSeparator +
+                pages + CsvSeparator +
+                isbn;
     }
 
     @Override

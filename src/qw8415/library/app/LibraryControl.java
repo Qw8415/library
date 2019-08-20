@@ -2,12 +2,15 @@ package qw8415.library.app;
 
 import qw8415.library.ecxeption.DataExportException;
 import qw8415.library.ecxeption.DataImportException;
+import qw8415.library.ecxeption.InvalidDataException;
 import qw8415.library.ecxeption.NoSuchOptionException;
 import qw8415.library.io.ConsolePrinter;
 import qw8415.library.io.DataReader;
 import qw8415.library.io.file.FileManager;
 import qw8415.library.io.file.FileManagerBuilder;
+import qw8415.library.model.Book;
 import qw8415.library.model.Library;
+import qw8415.library.model.Magazine;
 
 import java.util.InputMismatchException;
 
@@ -22,14 +25,14 @@ class LibraryControl {
         try {
             library = fileManager.importData();
             printer.printLine("Wczytano dane.");
-        } catch (DataImportException e) {
+        } catch (DataImportException | InvalidDataException e) {
             printer.printLine(e.getMessage());
-            library = new Library();
             printer.printLine("Zainicjowano nową bazę danych.");
+            library = new Library();
         }
     }
 
-    public void controlLoop() {
+    void controlLoop() {
         Option option;
 
         do {
@@ -47,6 +50,12 @@ class LibraryControl {
                     break;
                 case PRINT_MAGAZINES:
                     printMagazines();
+                    break;
+                case DELETE_BOOK:
+                    deleteBook();
+                    break;
+                case DELETE_MAGAZINE:
+                    deleteMagazine();
                     break;
                 case EXIT:
                     exit();
@@ -86,7 +95,7 @@ class LibraryControl {
 
     private void addBook() {
         try {
-            library.addBook(reader.readAndCreateBook());
+            library.addPublication(reader.readAndCreateBook());
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine(e.getMessage());
         } catch (InputMismatchException e) {
@@ -96,7 +105,7 @@ class LibraryControl {
 
     private void addMagazine() {
         try {
-            library.addMagazine(reader.readAndCreateMagazine());
+            library.addPublication(reader.readAndCreateMagazine());
         } catch (ArrayIndexOutOfBoundsException e) {
             printer.printLine(e.getMessage());
         } catch (InputMismatchException e) {
@@ -118,12 +127,41 @@ class LibraryControl {
         System.out.println(Option.EXIT.toString());
     }
 
+    private void deleteBook() {
+        try {
+            Book book = reader.readAndCreateBook();
+            if (library.removePublication(book)) {
+                printer.printLine("Usunięto książkę: " + book.toString());
+            } else {
+                printer.printLine("Brak książki w bazie!");
+            }
+        } catch (InputMismatchException e) {
+            printer.printLine("Wprowadzono błędne dane!");
+        }
+    }
+
+    private void deleteMagazine() {
+        try {
+            Magazine magazine = reader.readAndCreateMagazine();
+            if (library.removePublication(magazine)) {
+                printer.printLine("Usunięto książkę: " + magazine.toString());
+            } else {
+                printer.printLine("Brak książki w bazie!");
+            }
+        } catch (InputMismatchException e) {
+            printer.printLine("Wprowadzono błędne dane!");
+        }
+    }
+
+
     private enum Option {
         EXIT(0, "Wyjdź"),
         ADD_BOOK(1, "Dodaj książkę"),
         ADD_MAGAZINE(2, "Dodaj magazyn"),
         PRINT_BOOKS(3, "Dostępne książki"),
-        PRINT_MAGAZINES(4, "Dostępne magazyny");
+        PRINT_MAGAZINES(4, "Dostępne magazyny"),
+        DELETE_BOOK(5, "Usuń książkę"),
+        DELETE_MAGAZINE(6, "Usuń magazyn");
 
         private int value;
         private String description;

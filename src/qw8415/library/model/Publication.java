@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public abstract class Publication implements Serializable {
+    public static final String CsvSeparator = ";";
     private int year;
     private String title;
     private String publisher;
+
+    public abstract String toCsv();
 
     Publication(int year, String title, String publisher) {
         this.year = year;
