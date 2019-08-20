@@ -11,7 +11,10 @@ import qw8415.library.io.file.FileManagerBuilder;
 import qw8415.library.model.Book;
 import qw8415.library.model.Library;
 import qw8415.library.model.Magazine;
+import qw8415.library.model.Publication;
+import qw8415.library.model.comaparator.AlphabeticalTitleComparator;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
 class LibraryControl {
@@ -113,7 +116,10 @@ class LibraryControl {
         }
     }
 
-    private void printBooks() { printer.printBooks(library.getPublications()); }
+    private void printBooks() {
+        Publication[] publications = library.getPublications();
+        Arrays.sort(publications, new AlphabeticalTitleComparator());
+        printer.printBooks(publications); }
 
     private void printMagazines() {
         printer.printMagazines(library.getPublications());

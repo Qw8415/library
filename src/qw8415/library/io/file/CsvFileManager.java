@@ -16,7 +16,10 @@ class CsvFileManager implements FileManager {
     public Library importData() {
         Library library = new Library();
         try (Scanner fileScanner = new Scanner(new File(FILE_NAME))) {
-            Publication publication = createObjectFromString(fileScanner.nextLine());
+            while (fileScanner.hasNextLine()) {
+                Publication publication = createObjectFromString(fileScanner.nextLine());
+                library.addPublication(publication);
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
