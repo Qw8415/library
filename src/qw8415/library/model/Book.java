@@ -1,5 +1,7 @@
 package qw8415.library.model;
 
+import static qw8415.library.io.file.CsvFileManager.CSV_SEPARATOR;
+
 import java.util.Objects;
 
 public class Book extends Publication{
@@ -21,12 +23,12 @@ public class Book extends Publication{
 
     @Override
     public String toCsv() {
-        return TYPE + CsvSeparator +
-                getTitle() + CsvSeparator +
-                getPublisher() + CsvSeparator +
-                getYear() + CsvSeparator +
-                author + CsvSeparator +
-                pages + CsvSeparator +
+        return TYPE + CSV_SEPARATOR +
+                getTitle() + CSV_SEPARATOR +
+                getPublisher() + CSV_SEPARATOR +
+                getYear() + CSV_SEPARATOR +
+                author + CSV_SEPARATOR +
+                pages + CSV_SEPARATOR +
                 isbn;
     }
 

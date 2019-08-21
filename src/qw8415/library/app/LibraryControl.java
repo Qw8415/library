@@ -1,20 +1,15 @@
 package qw8415.library.app;
 
-import qw8415.library.ecxeption.DataExportException;
-import qw8415.library.ecxeption.DataImportException;
-import qw8415.library.ecxeption.InvalidDataException;
-import qw8415.library.ecxeption.NoSuchOptionException;
+import qw8415.library.ecxeption.*;
 import qw8415.library.io.ConsolePrinter;
 import qw8415.library.io.DataReader;
 import qw8415.library.io.file.FileManager;
 import qw8415.library.io.file.FileManagerBuilder;
 import qw8415.library.model.Book;
 import qw8415.library.model.Library;
+import qw8415.library.model.LibraryUser;
 import qw8415.library.model.Magazine;
-import qw8415.library.model.Publication;
-import qw8415.library.model.comaparator.AlphabeticalTitleComparator;
 
-import java.util.Arrays;
 import java.util.InputMismatchException;
 
 class LibraryControl {
@@ -60,6 +55,12 @@ class LibraryControl {
                 case DELETE_MAGAZINE:
                     deleteMagazine();
                     break;
+                case ADD_USER:
+                    addUser();
+                    break;
+                case PRINT_USERS:
+                    printUsers();
+                    break;
                 case EXIT:
                     exit();
                     break;
@@ -69,15 +70,12 @@ class LibraryControl {
         } while (option != Option.EXIT);
     }
 
-    private void exit() {
-        try {
-            fileManager.exportData(library);
-            printer.printLine("Zapisano bazę.");
-        } catch (DataExportException e) {
-            printer.printLine(e.getMessage());
+    private void printOption() {
+        System.out.println("\n---=== MENU ===---");
+        for (int i = 1; i < Option.values().length; i++) {
+            System.out.println(Option.values()[i].toString());
         }
-        reader.close();
-        System.out.println("Do widzenia!");
+        System.out.println(Option.EXIT.toString());
     }
 
     private Option getOption() {
@@ -116,22 +114,20 @@ class LibraryControl {
         }
     }
 
-    private void printBooks() {
-        Publication[] publications = library.getPublications();
-        Arrays.sort(publications, new AlphabeticalTitleComparator());
-        printer.printBooks(publications); }
-
-    private void printMagazines() {
-        printer.printMagazines(library.getPublications());
-    }
-
-    private void printOption() {
-        System.out.println("\n---=== MENU ===---");
-        for (int i = 1; i < Option.values().length; i++) {
-            System.out.println(Option.values()[i].toString());
+    private void addUser() {
+        LibraryUser user = reader.createLibraryUser();
+        try {
+            library.addUser(user);
+        } catch (UserAlreadyExistsException e) {
+            printer.printLine(e.getMessage());
         }
-        System.out.println(Option.EXIT.toString());
     }
+
+    private void printBooks() { printer.printBooks(library.getPublications().values()); }
+
+    private void printMagazines() { printer.printMagazines(library.getPublications().values()); }
+
+    private void printUsers() { printer.printUsers(library.getUsers().values()); }
 
     private void deleteBook() {
         try {
@@ -159,15 +155,19 @@ class LibraryControl {
         }
     }
 
+    private void exit() {
+        try {
+            fileManager.exportData(library);
+            printer.printLine("Zapisano bazę.");
+        } catch (DataExportException e) {
+            printer.printLine(e.getMessage());
+        }
+        reader.close();
+        System.out.println("Do widzenia!");
+    }
 
     private enum Option {
-        EXIT(0, "Wyjdź"),
-        ADD_BOOK(1, "Dodaj książkę"),
-        ADD_MAGAZINE(2, "Dodaj magazyn"),
-        PRINT_BOOKS(3, "Dostępne książki"),
-        PRINT_MAGAZINES(4, "Dostępne magazyny"),
-        DELETE_BOOK(5, "Usuń książkę"),
-        DELETE_MAGAZINE(6, "Usuń magazyn");
+        EXIT(0, "Wyjdź"), ADD_BOOK(1, "Dodaj książkę"), ADD_MAGAZINE(2, "Dodaj magazyn"), PRINT_BOOKS(3, "Dostępne książki"), PRINT_MAGAZINES(4, "Dostępne magazyny"), DELETE_BOOK(5, "Usuń książkę"), DELETE_MAGAZINE(6, "Usuń magazyn"), ADD_USER(7, "Dodaj użytkownika"), PRINT_USERS(8, "Wyświetl użytkowników");
 
         private int value;
         private String description;
