@@ -52,25 +52,21 @@ public class CsvFileManager implements FileManager {
 
     private void exportPublications(Library library) {
         Collection<Publication> publications = library.getPublications().values();
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(PUBLICATIONS_FILE_NAME))) {
-            for (Publication publication : publications) {
-                bufferedWriter.write(publication.toCsv());
-                bufferedWriter.newLine();
-            }
-        } catch (IOException e) {
-            throw new DataExportException("Błąd zapisu do pliku: " + PUBLICATIONS_FILE_NAME);
-        }
+        exportToCsv(publications, PUBLICATIONS_FILE_NAME);
     }
 
     private void exportUsers(Library library) {
         Collection<LibraryUser> users = library.getUsers().values();
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(USERS_FILE_NAME))) {
-            for (LibraryUser user : users) {
-                writer.write(user.toCsv());
+        exportToCsv(users, USERS_FILE_NAME);
+    }
+    private <T extends CsvConvertible> void exportToCsv(Collection<T> collection, String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            for (T element : collection) {
+                writer.write(element.toCsv());
                 writer.newLine();
             }
         } catch (IOException e) {
-            throw new DataExportException("Błąd zapisu do pliku: " + USERS_FILE_NAME);
+            throw new DataExportException("Błąd zapisu do pliku: " + fileName);
         }
     }
 
