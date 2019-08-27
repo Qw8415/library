@@ -4,7 +4,6 @@ import qw8415.library.model.Book;
 import qw8415.library.model.LibraryUser;
 import qw8415.library.model.Magazine;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class DataReader {

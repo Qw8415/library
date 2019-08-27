@@ -5,11 +5,9 @@ import qw8415.library.io.ConsolePrinter;
 import qw8415.library.io.DataReader;
 import qw8415.library.io.file.FileManager;
 import qw8415.library.io.file.FileManagerBuilder;
-import qw8415.library.model.Book;
-import qw8415.library.model.Library;
-import qw8415.library.model.LibraryUser;
-import qw8415.library.model.Magazine;
+import qw8415.library.model.*;
 
+import java.util.Comparator;
 import java.util.InputMismatchException;
 
 class LibraryControl {
@@ -123,11 +121,20 @@ class LibraryControl {
         }
     }
 
-    private void printBooks() { printer.printBooks(library.getPublications().values()); }
+    private void printBooks() {
+        printer.printBooks(library.getSortedPublication(
+                Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)));
+    }
 
-    private void printMagazines() { printer.printMagazines(library.getPublications().values()); }
+    private void printMagazines() {
+        printer.printMagazines(library.getSortedPublication(
+                Comparator.comparing(Publication::getTitle, String.CASE_INSENSITIVE_ORDER)));
+    }
 
-    private void printUsers() { printer.printUsers(library.getUsers().values()); }
+    private void printUsers() {
+        printer.printUsers(library.getSortedUsers(
+                Comparator.comparing(User::getLastName, String.CASE_INSENSITIVE_ORDER)));
+    }
 
     private void deleteBook() {
         try {

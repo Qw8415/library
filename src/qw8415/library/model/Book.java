@@ -1,8 +1,8 @@
 package qw8415.library.model;
 
-import static qw8415.library.io.file.CsvFileManager.CSV_SEPARATOR;
-
 import java.util.Objects;
+
+import static qw8415.library.io.file.CsvFileManager.CSV_SEPARATOR;
 
 public class Book extends Publication{
     public static final String TYPE = "Book";

@@ -7,7 +7,6 @@ import qw8415.library.model.*;
 
 import java.io.*;
 import java.util.Collection;
-import java.util.Scanner;
 
 public class CsvFileManager implements FileManager {
     private static final String PUBLICATIONS_FILE_NAME = "Library.csv";
@@ -29,24 +28,26 @@ public class CsvFileManager implements FileManager {
     }
 
     private void importPublications(Library library) {
-        try (Scanner fileScanner = new Scanner(new File(PUBLICATIONS_FILE_NAME))) {
-            while (fileScanner.hasNextLine()) {
-                Publication publication = createPublicationFromString(fileScanner.nextLine());
-                library.addPublication(publication);
-            }
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(PUBLICATIONS_FILE_NAME))) {
+            bufferedReader.lines()
+                    .map(this::createPublicationFromString)
+                    .forEach(library::addPublication);
         } catch (FileNotFoundException e) {
             throw new DataImportException("Nie znaleziono pliku " + PUBLICATIONS_FILE_NAME);
+        } catch (IOException e) {
+            throw new DataImportException("Błąd odczytu pliku " + PUBLICATIONS_FILE_NAME);
         }
     }
 
     private void importUsers(Library library) {
-        try (Scanner fileScanner = new Scanner(new File(USERS_FILE_NAME))) {
-            while (fileScanner.hasNextLine()) {
-                LibraryUser user = createUserFromString(fileScanner.nextLine());
-                library.addUser(user);
-            }
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(USERS_FILE_NAME))) {
+            bufferedReader.lines()
+                    .map(this::createUserFromString)
+                    .forEach(library::addUser);
         } catch (FileNotFoundException e) {
             throw new DataImportException("Nie znaleziono pliku: " + USERS_FILE_NAME);
+        } catch (IOException e) {
+            throw new DataImportException("Błąd odczytu pliku " + USERS_FILE_NAME);
         }
     }
 

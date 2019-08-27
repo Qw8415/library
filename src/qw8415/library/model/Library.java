@@ -4,9 +4,7 @@ import qw8415.library.ecxeption.PublicationAlreadyExistsException;
 import qw8415.library.ecxeption.UserAlreadyExistsException;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Library implements Serializable {
     private Map<String, Publication> publications = new HashMap<>();
@@ -18,6 +16,18 @@ public class Library implements Serializable {
 
     public Map<String, LibraryUser> getUsers() {
         return users;
+    }
+
+    public Collection<Publication> getSortedPublication(Comparator<Publication> comparator) {
+        ArrayList<Publication> list = new ArrayList<>(publications.values());
+        list.sort(comparator);
+        return list;
+    }
+
+    public Collection<LibraryUser> getSortedUsers(Comparator<LibraryUser> comparator) {
+        ArrayList<LibraryUser> list = new ArrayList<>(users.values());
+        list.sort(comparator);
+        return list;
     }
 
     public void addUser(LibraryUser user) {
