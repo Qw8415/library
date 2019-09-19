@@ -1,4 +1,4 @@
 # library
 Library management console application
 
-Based on javastart.pl course.
+Based on cours javastart.pl
